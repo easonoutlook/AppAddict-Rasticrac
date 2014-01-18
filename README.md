@@ -5,6 +5,10 @@ AppAddict-Rasticrac
 *We are currently working on Brake*
 *DblD will fiddle around some more with this :P*
 
+<b>THIS PROJECT IS DEAD (mostly) AS OF 18.01.2014.</b>
+*This is repo is for historical reference only*
+*To Crack, Upload and Submit to AppAddict, use CrackAddict!*
+
 Rasticrac with filehost upload and AppAddict submission!
 
 Created by tjglass and DblD
