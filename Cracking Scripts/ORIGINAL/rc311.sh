@@ -1,71 +1,64 @@
-#!/bin/bash
-
+#!/bin/sh
 #
-# Rasticrac v3.1a5 (october 2013)
-# By tjglass and DblD [AppAddict]
+# Rasticrac v3.1.1 (february 2014)
 #
 # Rapid Advanced Secure Thorough Intelligent Gaulish Nuclear Acclaimed Cracker
+# Rapide Avance Securise Tout-terrain Intelligent Gaulois Nucleaire Approfondi Craqueur
 #
 #
 # The truth is I never left you. I kept my promise.
 #
-# This is an improved version of rasticrac that works 3x faster! (Thanks to dumpdecrypted by Stefan Esser)
+# Je serai là, toujours pour toi, car je resterai ta meilleure amie.
 #
-# This script will also include an upload and submit feature!
 #
-# Currently this script only works with some apps, since it has a problem handling ASLR (trying to find workarounds)
-#
-# Original Creator Home: https://twitter.com/iRastignac
-#
+# Home/Help/Donate: https://twitter.com/iRastignac
 #
 
-if [ $UID -ne 0 ]; then
-   echo "Please run as root!"
-   exit 1
-fi
+
 
 # ======
-# Please, customize the script first !
+# Please, customize the script first!
 # Choices are:
 
-# - Default language (US: English).
-# - Languages Have Been Removed They Will Be Added At A Later Date
+# - Default language (US:english, FR:french, ES:spanish, DE:german, IT:italian).
  RClang="US"
-
-# - User credentials for uploading to MEGA
-# - N/A
-#megauser=""
-#megapass=""
+#RClang="FR1"
+#RClang="FR2"
+#RClang="ES1"
+#RClang="ES2"
+#RClang="DE1"
+#RClang="DE2"
+#RClang="IT1"
+#RClang="IT2"
 
 # - Default CrackerName (or "Anonymous").
 RCcracker="Anonymous"
 
-# - If you Crack For AppAddict Enter "aa" (No Caps, No quotes - don't delete the ones below, don't and new ones)
-# - If you Crack For A Other Site (e.g. iPhoneCake) Enter "other" (No Caps, No quotes - don't delete the ones below, don't and new ones)
-#Crcommunity=""
-
-# - Should "extra details" appear in Ipa name (ie: "iPad / 3GS / etc") ? (You can hate them)
+# - Should "extra details" appear in Ipa name? (ie: "iPad / 3GS / etc") (You can hate them)
 RCextras="YES"
 
-# - Display graphical progress bars ? (based on number and/or size of apps) ("by size" is slower)
+# - Display graphical progress bars? (based on number and/or size of apps) ("by size" is slower)
 RCbarNum="YES"
 RCbarSize="YES"
 
-# - Should display be verbose ? (verbose is slower and messier)
+# - Should display be verbose? (verbose is slower and messier)
 RCverbose="NO"
 
-# - Should script talk to you ? (it only speaks english, only with iOS4+, only with "speak" tool from Cydia)
+# - Should script talk to you? (it only speaks english, only with iOS4+, only with "speak" tool from Cydia)
 RCspeak="YES"
 
-# - Should artist's name be used in filename ?
+# - Should artist's name be used in filename?
 RCartistfrommeta="YES"
 
-# - Should menu display 'real name' of apps ? (slower, slower, and strange sort order)
+# - Should itemId be used in filename?
+RCitemId="NO"
+
+# - Should menu display 'real name' of apps? (slower, slower, and strange sort order)
 RCrealnamemenu="NO"
 
 # - Default compression level is blank (aka "-6"), and is the best speed/size ratio.
 # - Recommended. Upload/download/storage will be good.
-RCcompression=""
+ RCcompression=""
 # - Maximum compression ("-9") (also "-8" or "-7") is very very slow, but size is the best.
 # - If your iDevice is fast, if you're not in a hurry, if size matters. Best upload/download/storage.
 #RCcompression="-9"
@@ -75,28 +68,25 @@ RCcompression=""
 #RCcompression="-2"
 # - Don't use "-1" (sloppy) or "-0" (store), as size will be horrible, and all will suffer. Avoid.
 
-# - Should I generate fake MetaData or not ?
+# - Should I generate fake MetaData or not?
 #   (Some people hate them, some love them, some protections check them, you should really keep them)
 RCmetadata="YES"
 
-# - Should I try LamestPatchest on the executable ?
+# - Should I try LamestPatchest on the executable?
 #   (It won't work 100%, but sometimes it really helps) (and now it's very very fast) (you should keep it)
 RClamestpatchest="YES"
 
-# - What menu dots do you prefer ?
+# - What menu dots do you prefer?
  RCdots=".............................."
 #RCdots="------------------------------"
-#RCdots="			       "
+#RCdots="                              "
 #RCdots="______________________________"
 
 # Progress bar display
 RCxxx="====="
 RCsss="-----"
 
-# Low-end iDevice (with low memory) (addind swap also will help)
-RClowend="NO"
-
-# DEBUG ONLY: - Force the "this script is running inside a GUI" check ?
+# DEBUG ONLY: - Force the "this script is running inside a GUI" check?
 RCinaGUI="NEVER"
 # DEBUG ONLY: - Check only (all tested but Ipa not created)
 RCcheck="NEVER"
@@ -105,35 +95,12 @@ RCcheck="NEVER"
 # ======
 
 
-# Checking for Mega LOGIN
-# if [ -e "/var/root/.megacmd.json" ];
-# then
-#   echo "Login File Found"
-# else
-#   echo "Mega.co.nz Login file not created"
-#   echo "Do you want to upload to MEGA? Y/N"
-#   read megayn
-#   if [ $megayn = "y" ];
-#   then
-#		 echo "Creating Login File..."
-#		# - Creating File
-#		 echo "{" > "/var/root/.megacmd.json"
-#		 echo "User : $megauser ," >> "/var/root/.megacmd.json"
-#		 echo "Password : $megapass ," >> "/var/root/.megacmd.json"
-#		 echo "DownloadWorkers : 4," >> "/var/root/.megacmd.json"
-#		 echo "UploadWorkers : 4," >> "/var/root/.megacmd.json"
-#		 echo "SkipSameSize : true," >> "/var/root/.megacmd.json"
-#		 echo "Verbose : 1" >> "/var/root/.megacmd.json"
-#		 echo "}" >> "/var/root/.megacmd.json"
-#		 echo "Done!"
-#   else
-#		 echo "MEGA uploading #disabled!"
-#   fi
-# fi
 
 # ======
 function SelectLanguage
 {
+# Language US
+if [ $RClang = "US" ]; then
 	MsgAltMeth="Using alternative dumping method"
 	MsgAnaAppl="Analyzing application"
 	MsgAppLoca="Locating"
@@ -171,9 +138,251 @@ function SelectLanguage
 	MsgWasAskd="Asked"
 	MsgErrrors="Errors"
 	MsgBrzNoth="nothing"
-	MsgMrkDone="Mark all done		  "
-	MskZroDone="Reset done list		  "
+	MsgMrkDone="Mark all done                 "
+	MskZroDone="Reset done list               "
+fi
+
+# Language FR1 or FR2
+if [ $RClang = "FR1" -o $RClang = "FR2" ]; then
+	MsgAnaAppl="Analyse d'application"
+	MsgAppLoca="Recherche"
+	MsgBldMenu="Construction du menu..."
+	MsgBrzMode="Mode Berzerk: on craque TOUT"
+	MsgCntFind="Introuvable:"
+	MsgDskFull="Disque plein"
+	MsgInsCydi="Installer avec Cydia"
+	MsgMnuEmpt="vide"
+	MsgRemTemp="Effacement fichiers temporaires"
+	MsgSizUnit="o"
+	MsgUnaLoca="Impossible de trouver"
+	MsgWrgChoi="Mauvais choix"
+	MsgWarning="Attention"
+	MsgWrnMeta="nouveau format d'iTunesMetadata"
+	MsgYouChoi="Votre choix"
+	MsgComBoth="Consolidation des deux sections binaires"
+	MsgSgnAppl="Signature de l'application"
+	MsgCopArtw="Copie de l'Artwork"
+	MsgFakMeta="et fausses MetaData"
+	MsgNotMeta="et pas de MetaData"
+	MsgWasAskd="Voulu"
+	MsgErrrors="Erreurs"
+	MsgBrzNoth="rien"
+	MsgMrkDone="Tout marquer fait             "
+	MskZroDone="Effacer liste fait            "
+fi
+# Language FR1 (ascii)
+if [ $RClang = "FR1" ]; then
+	MsgAltMeth="$( echo -ne "M\0351thode alternative de dumping" )"
+	MsgBadChoi="$( echo -ne "Choix erron\0351" )"
+	MsgCopExec="$( echo -ne "& copie de l'ex\0351cutable" )"
+	MsgCreDire="$( echo -ne "Cr\0351ation r\0351pertoires" )"
+	MsgDmpUncr="$( echo -ne "Extraction des donn\0351es d\0351crypt\0351es de l'appli" )"
+	MsgIpaInco="$( echo -ne "Ipa incompl\0350te" )"
+	MsgEraMemo="$( echo -ne "Effacement fichier m\0351moire" )"
+	MsgIpaDone="$( echo -ne "R\0351sultat:" )"
+	MsgMarDone="$( echo -ne "Toutes les apps sont marqu\0351es comme trait\0351es" )"
+	MsgPatCryp="$( echo -ne "Localisation et \0351crasement du CryptID" )"
+	MsgRepData="$( echo -ne "et remplacement par d\0351crypt\0351es" )"
+	MsgVrfDump="$( echo -ne "V\0351rif donn\0351es" )"
+	MsgZipStep="$( echo -ne "Compression de l'ipa (\0351tape" )"
+	MsgFoundIt="$( echo -ne "Trouv\0351" )"
+fi
+# Language FR2 (utf8)
+if [ $RClang = "FR2" ]; then
+	MsgAltMeth="$( echo -ne "M\0303\0251thode alternative de dumping" )"
+	MsgBadChoi="$( echo -ne "Choix erron\0303\0251" )"
+	MsgCopExec="$( echo -ne "& copie de l'ex\0303\0251cutable" )"
+	MsgCreDire="$( echo -ne "Cr\0303\0251ation r\0303\0251pertoires" )"
+	MsgDmpUncr="$( echo -ne "Extraction des donn\0303\0251es d\0303\0251crypt\0303\0251es de l'appli" )"
+	MsgIpaInco="$( echo -ne "Ipa incompl\0303\0250te" )"
+	MsgEraMemo="$( echo -ne "Effacement fichier m\0303\0251moire" )"
+	MsgIpaDone="$( echo -ne "R\0303\0251sultat:" )"
+	MsgMarDone="$( echo -ne "Toutes les apps sont marqu\0303\0251es comme trait\0303\0251es" )"
+	MsgPatCryp="$( echo -ne "Localisation et \0303\0251crasement du CryptID" )"
+	MsgRepData="$( echo -ne "et remplacement par d\0303\0251crypt\0303\0251es" )"
+	MsgVrfDump="$( echo -ne "V\0303\0251rif donn\0303\0251es" )"
+	MsgZipStep="$( echo -ne "Compression de l'ipa (\0303\0251tape" )"
+	MsgFoundIt="$( echo -ne "Trouv\0303\0251" )"
+fi
+
+
+# Language ES1 or ES2
+if [ $RClang = "ES1" -o $RClang = "ES2" ]; then
+	MsgBrzMode="Modo Berzerk: crackando TODO"
+	MsgCntFind="No encontro"
+	MsgCopExec="y copiando ejecutable"
+	MsgCreDire="Creando directorios"
+	MsgEraMemo="Borrado memoria archivo"
+	MsgInsCydi="Instalarlo desde Cydia"
+	MsgIpaDone="Done as"
+	MsgMarDone="Marcando todas aplicaciones como 'hecho'"
+	MsgPatCryp="Locating y patching CryptID"
+	MsgRemTemp="Borrando archivos temporales"
+	MsgRepData="y reemplazando datos cifrados"
+	MsgSizUnit="B"
+	MsgUnaLoca="Incapaz de ubicar"
+	MsgWarning="Warning"
+	MsgWrnMeta="iTunesMetadata formato cambiado"
+	MsgCopArtw="Copiando Artwork"
+	MsgFakMeta="y fingiendo MetaData"
+	MsgNotMeta="y no MetaData"
+	MsgFoundIt="Found"
+	MsgWasAskd="Asked"
+	MsgErrrors="Errores"
+	MsgBrzNoth="nada"
+	MsgMrkDone="Marcar todas hechas           "
+	MskZroDone="Vaciar lista hechas           "
+fi
+# Language ES1 (ascii)
+if [ $RClang = "ES1" ]; then
+	MsgAltMeth="$( echo -ne "Usando m\0351todo alternativo de dumping" )"
+	MsgAnaAppl="$( echo -ne "Analizando aplicaci\0363n" )"
+	MsgAppLoca="$( echo -ne "Ubicaci\0363n" )"
+	MsgBadChoi="$( echo -ne "Mala elecci\0363n" )"
+	MsgBldMenu="$( echo -ne "Construyendo men\0372..." )"
+	MsgDmpUncr="$( echo -ne "Dumping decifrados datos de la aplicaci\0363n" )"
+	MsgIpaInco="$( echo -ne "\0241 Incompleta .ipa" )"
+	MsgDskFull="$( echo -ne "\0277 Disco lleno" )"
+	MsgMnuEmpt="$( echo -ne "vac\0355o" )"
+	MsgVrfDump="$( echo -ne "Verificaci\0363n" )"
+	MsgWrgChoi="$( echo -ne "Opci\0363n incorrecta" )"
+	MsgYouChoi="$( echo -ne "\0277 Su elecci\0363" )"
+	MsgZipStep="$( echo -ne "Compresi\0363n de .ipa (paso" )"
+	MsgComBoth="$( echo -ne "Combinaci\0363n dos partes en fat binary" )"
+	MsgSgnAppl="$( echo -ne "Firma de la aplicaci\0363n" )"
+fi
+# Language ES2 (utf8)
+if [ $RClang = "ES2" ]; then
+	MsgAltMeth="$( echo -ne "Usando m\0303\0251todo alternativo de dumping" )"
+	MsgAnaAppl="$( echo -ne "Analizando aplicaci\0303\0263n" )"
+	MsgAppLoca="$( echo -ne "Ubicaci\0303\0263n" )"
+	MsgBadChoi="$( echo -ne "Mala elecci\0303\0263n" )"
+	MsgBldMenu="$( echo -ne "Construyendo men\0303\0272..." )"
+	MsgDmpUncr="$( echo -ne "Dumping decifrados datos de la aplicaci\0303\0263n" )"
+	MsgIpaInco="$( echo -ne "\0302\0241 Incompleta .ipa" )"
+	MsgDskFull="$( echo -ne "\0302\0277 Disco lleno" )"
+	MsgMnuEmpt="$( echo -ne "vac\0303\0255o" )"
+	MsgVrfDump="$( echo -ne "Verificaci\0303\0263n" )"
+	MsgWrgChoi="$( echo -ne "Opci\0303\0263n incorrecta" )"
+	MsgYouChoi="$( echo -ne "\0302\0277 Su elecci\0303\0263" )"
+	MsgZipStep="$( echo -ne "Compresi\0303\0263n de .ipa (paso" )"
+	MsgComBoth="$( echo -ne "Combinaci\0303\0263n dos partes en fat binary" )"
+	MsgSgnAppl="$( echo -ne "Firma de la aplicaci\0303\0263n" )"
+fi
+
+# Language DE1 or DE2. Translation by Ushnak.
+if [ $RClang = "DE1" -o $RClang = "DE2" ]; then
+	MsgAltMeth="Alternative Methode zum Dumpen"
+	MsgAnaAppl="Analyse der App"
+	MsgAppLoca="Suche"
+	MsgBrzMode="Berzerker Modus: ALLES wird gecrackt"
+	MsgCntFind="Nicht aufzufinden:"
+	MsgCopExec="Kopieren der Executable"
+	MsgCreDire="Erstellen der Ordner"
+	MsgDskFull="Kein Speicher mehr"
+	MsgInsCydi="Installieren mit Cydia"
+	MsgIpaDone="Fertig"
+	MsgMnuEmpt="leer"
+	MsgMarDone="Alle Apps als gecrackt markieren"
+	MsgPatCryp="Aufinden und patchen der CryptID"
+	MsgSizUnit="B"
+	MsgWrgChoi="Schlechte Wahl"
+	MsgWarning="Warnung"
+	MsgYouChoi="Ihre Wahl"
+	MsgZipStep="Kompression der .ipa (Schritt"
+	MsgSgnAppl="Signieren der App"
+	MsgCopArtw="Kopieren des Artworks"
+	MsgFakMeta="und der falschen MetaData"
+	MsgNotMeta="und keine MetaData"
+	MsgFoundIt="Gefunden"
+	MsgWasAskd="Angefragt"
+	MsgErrrors="Fehler"
+	MsgBrzNoth="Nichts"
+fi
+# Language DE1 (ascii). Translation by Ushnak.
+if [ $RClang = "DE1" ]; then
+	MsgBadChoi="$( echo -ne "Ung\0374ltige Wahl" )"
+	MsgBldMenu="$( echo -ne "Aufbau des Men\0374s..." )"
+	MsgDmpUncr="$( echo -ne "Dumping von unverschl\0374sselten Daten der App" )"
+	MsgIpaInco="$( echo -ne "Unvollst\0344ndige .ipa" )"
+	MsgEraMemo="$( echo -ne "L\0366schen des Zwischenspeichers" )"
+	MsgRemTemp="$( echo -ne "L\0366schen des Speichers" )"
+	MsgRepData="$( echo -ne "und Austausch der verschl\0374sselten Daten" )"
+	MsgUnaLoca="$( echo -ne "Unm\0366glich zu Finden" )"
+	MsgVrfDump="$( echo -ne "\0334perpr\0374fen des Dumps" )"
+	MsgWrnMeta="$( echo -ne "Das Format der iTunesMetaData wurde ge\0344ndert" )"
+	MsgComBoth="$( echo -ne "Zusammensetzung der zwei Bin\0344rdateien" )"
+	MsgMrkDone="$( echo -ne "Alles als angew\0344hlt           " )"
+	MskZroDone="$( echo -ne "Liste der angew\0344hlten l\0366schen " )"
+fi
+# Language DE2 (utf8). Translation by Ushnak.
+if [ $RClang = "DE2" ]; then
+	MsgBadChoi="$( echo -ne "Ung\0303\0274ltige Wahl" )"
+	MsgBldMenu="$( echo -ne "Aufbau des Men\0303\0274s..." )"
+	MsgDmpUncr="$( echo -ne "Dumping von unverschl\0303\0274sselten Daten der App" )"
+	MsgIpaInco="$( echo -ne "Unvollst\0303\0244ndige .ipa" )"
+	MsgEraMemo="$( echo -ne "L\0303\0266schen des Zwischenspeichers" )"
+	MsgRemTemp="$( echo -ne "L\0303\0266schen des Speichers" )"
+	MsgRepData="$( echo -ne "und Austausch der verschl\0303\0274sselten Daten" )"
+	MsgUnaLoca="$( echo -ne "Unm\0303\0266glich zu Finden" )"
+	MsgVrfDump="$( echo -ne "\0303\0234perpr\0303\0274fen des Dumps" )"
+	MsgWrnMeta="$( echo -ne "Das Format der iTunesMetaData wurde ge\0303\0244ndert" )"
+	MsgComBoth="$( echo -ne "Zusammensetzung der zwei Bin\0303\0244rdateien" )"
+	MsgMrkDone="$( echo -ne "Alles als angew\0303\0244hlt           " )"
+	MskZroDone="$( echo -ne "Liste der angew\0303\0244hlten l\0303\0266schen " )"
+fi
+
+# Language IT1 and IT2. Translation by Wfede21.
+if [ $RClang = "IT1" -o $RClang = "IT2" ]; then
+	MsgAltMeth="Metodo alternativo di dump"
+	MsgAnaAppl="Analisi applicazione"
+	MsgAppLoca="Localizzo"
+	MsgBadChoi="Scelta sbagliata"
+	MsgBldMenu="Costruisco il menu..."
+	MsgCntFind="Impossibile trovare"
+	MsgCopExec="e copio l'eseguibile"
+	MsgCreDire="Creo le cartelle"
+	MsgDmpUncr="Dump dei dati non criptati dall'applicazione"
+	MsgIpaInco=".ipa non completa"
+	MsgDskFull="Memoria piena"
+	MsgEraMemo="Cancellando file di memoria"
+	MsgInsCydi="Installa da Cydia"
+	MsgIpaDone="Fatto come"
+	MsgMnuEmpt="vuoto"
+	MsgMarDone="Tutte le app craccate"
+	MsgPatCryp="Trovo e sistemo il CryptID"
+	MsgRemTemp="Rimozione file temporanei"
+	MsgRepData="e sostituisco i dati criptati"
+	MsgSizUnit="B"
+	MsgUnaLoca="Impossibile trovare"
+	MsgVrfDump="Controllo dump"
+	MsgWrgChoi="Scelta sbagliata"
+	MsgWarning="Attenzione"
+	MsgWrnMeta="formato iTunesMetadata cambiato"
+	MsgYouChoi="La tua scelta"
+	MsgZipStep="Compressione .ipa (passo"
+	MsgComBoth="Combino le parti in uno"
+	MsgSgnAppl="Signing the application"
+	MsgCopArtw="Copia di Artwork"
+	MsgFakMeta="e falsifico MetaData"
+	MsgNotMeta="e niente MetaData"
+	MsgFoundIt="Trovato"
+	MsgWasAskd="Chiesto"
+	MsgErrrors="Errore"
+	MsgBrzNoth="niente"
+	MsgMrkDone="Segna come tutte craccate     "
+	MskZroDone="Azzera lista app craccate     "
+fi
+# Language IT1 (ascii). Translation by Wfede21.
+if [ $RClang = "IT1" ]; then
+	MsgBrzMode="$( echo -ne "Modalit\0340 Berzerk: crack di tutte le app" )"
+fi
+# Language IT2 (utf8). Translation by Wfede21.
+if [ $RClang = "IT2" ]; then
+	MsgBrzMode="$( echo -ne "Modalit\0303\0240 Berzerk: crack di tutte le app" )"
+fi
 }
+
 
 
 # ======
@@ -215,6 +424,7 @@ human=$(echo -n "$unicode" | sed -e "s: :_:g" | od -c -A n -v --width=999 | sed 
 	-e 's:303.274:u:g' \
 	-e 's:304.237:g:g' \
 	-e 's:304.261:i:g' \
+	-e 's:305.215:o:g' \
 	-e 's:305.223:oe:g' \
 	-e 's:312.236:k:g' \
 	-e 's:316.251:Omega:g' \
@@ -240,6 +450,7 @@ human=$(echo -n "$unicode" | sed -e "s: :_:g" | od -c -A n -v --width=999 | sed 
 }
 
 
+
 # ======
 function DisplayBars
 {
@@ -263,73 +474,31 @@ fi
 }
 
 
-# ======
-# Begin LowEnd Function
-function LowEndFunction
-{
-	if [ $RClowend = "YES" ]; then
-		#echo "${Meter35}Trying to free some memory..."
-		p="/var/mobile/Library/SBSettings/Commands/com.sbsettings.freemem"
-		if [ -e "$p" ]; then
-			$p 2>/dev/null
-		else
-			echo "${Meter35}${escRed}SbSettings not found !${escReset}"
-		fi
-		sleep 1
-	fi
-}
-
-
-# ======
-# Begin Crack Function
-function CrackFunction
-{
-	# Remove ASLR - Experiment
-	# 1. Removing ASLR with noaslr
-	# 2. Crack it!
-	# noaslr "$AppPath/$AppName/$AppExec"
-	
-	# Cracking App Executable
-	# Patching CryptID 01 -> 00
-	cp "/var/root/dumpdecrypted.dylib" "$WorkDir"
-	cd "$WorkDir"
-	echo "Cracking the binary..."
-DYLD_INSERT_LIBRARIES=dumpdecrypted.dylib "$AppPath/$AppName/$AppExec" mach-o decryption dumper
-	
-	# Replacing executable's crypted data with dumped clear data
-	if [ $RCverbose = "YES" ]; then
-		echo "${Meter54}$MsgRepData"
-	fi
-mv "$WorkDir/$AppExec.decrypted" "$WorkDir/$AppName/$AppExec"
-}
-
 
 # ======
 # Begin Core Function
 function CoreFunction
 {
 AppInput=$1
+
+# Cracker's name and credits
 CrackerName=$2
 CreditFile=$3
-#Crcommunity=$4
-
 if [ ! "$CrackerName" ]; then
 	CrackerName="$RCcracker"
 fi
-
 if [ ! "$CreditFile" ]; then
 	CreditFile="$CrackerName"
 fi
 
-#if [ ! "$CrCommunity" ]; then
-#	Crcommunity="$Crcommunity"
-#fi
 # Script has app's full directory path as input (ie: called from GUI)
 if [ -d "$AppInput" ]; then
 	tempLoc=$AppInput
 	# Script is called by RemoteRasticrac from "/tmp/"
 	if [ "${AppInput:0:5}" = "/tmp/" ]; then
 		RCremote="YES"
+		# Compression must be "low" on the iDevice; "high" recompression will be done later by the PC
+		RCcompression="-2"
 	fi
 else
 	# Script has app's name as input
@@ -376,10 +545,10 @@ if [ ! -e "$AppPath/$AppName/$AppExec" ]; then
 fi
 # Get the name from MetaData
 AppDisplayName=$(plutil -key itemName "$AppPath/iTunesMetadata.plist" 2> /dev/null)
-# No alphanum characters at all ?
+# No alphanum characters at all?
 AppDisplayNameAlpha=$(echo -n "$AppDisplayName" | tr -cd "[:alnum:]")
 if [ "$AppDisplayNameAlpha" = "" ]; then
-	#echo "${Meter5}$MsgWarning: non-alpha name !"
+	#echo "${Meter5}$MsgWarning: non-alpha name!"
 	AppDisplayName=""
 fi
 # Get the name from InfoPlist or from executable name
@@ -393,7 +562,7 @@ if [ "$AppDisplayName" = "" ]; then
 			AppDisplayName=$AppExec
 			#AppDisplayNameAlpha=$(echo -n "$AppDisplayName" | tr -cd "[:alnum:]")
 			#if [ "$AppDisplayNameAlpha" = "" ]; then
-			#	echo "${Meter6}$MsgWarning: too exotic name !"
+			#	echo "${Meter6}$MsgWarning: too exotic name!"
 			#fi
 		fi
 	fi
@@ -408,7 +577,7 @@ AppDisplayName=$human
 if [ $RCartistfrommeta = "YES" ]; then
 	artistName=$(plutil -key artistName "$AppPath/iTunesMetadata.plist" 2> /dev/null)
 	artistNameAlpha=$(echo -n "$artistName" | tr -cd "[:alnum:]")
-	# At least some alphanum inside ?
+	# At least some alphanum inside?
 	if [ "$artistNameAlpha" != "" ]; then
 		# Convert from unicode to human
 		unicode=$artistName
@@ -417,17 +586,8 @@ if [ $RCartistfrommeta = "YES" ]; then
 	fi
 fi
 
-# Getting iTunes URL for AppAddict Submission
-
-# echo "Locating iTunes URL..."
-# iurl=http://itunes.apple.com/app/id$(plutil -#key itemId "$AppPath/iTunesMetadata.plist" 2> #/dev/null)
-# if [ -z $iurl ]; then
-#	 echo "ERROR! Failed To Find iTunes #URL!"
-# fi
-
 # Show the real human name of the app
 echo "${Meter5}$AppDisplayName"
-
 
 # Dealing with version numbers
 AppVer=$(plutil -key CFBundleVersion "$tempLoc/Info.plist" 2> /dev/null | tr -d "\n\r")
@@ -448,26 +608,26 @@ Extras=""
 ExtrasMatos=""
 ExtrasAslr=""
 
-# Does it need at least an iPhone3GS ?
+# Does it need at least an iPhone3GS?
 Required=$(plutil -key 'UIRequiredDeviceCapabilities' "$tempLoc/Info.plist" 2> /dev/null)
 if [ ! -z "$(echo "$Required" | grep -e "armv7" -e "opengles-2")" ]; then
 	ExtrasMatos=" 3GS"
 fi
-# Does it need at least an iPhone4 ?
+# Does it need at least an iPhone4?
 if [ ! -z "$(echo "$Required" | grep -e "front-facing-camera" -e "gyroscope")" ]; then
 	ExtrasMatos=" iPhone4"
 fi
-# Does it need at least an iPhone4S ?
+# Does it need at least an iPhone4S?
 if [ ! -z "$(echo "$Required" | grep -e "bluetooth-le")" ]; then
 	ExtrasMatos=" iPhone4S"
 fi
 
-# Is it iPad compatible only ? Or universal ?
+# Is it iPad compatible only? Or universal?
 iPad=$(plutil -key 'UIDeviceFamily' "$tempLoc/Info.plist" 2> /dev/null)
 if [ ! -z "$iPad" ]; then
 	if [ -z "$(echo "$iPad" | grep -e "1")" ]; then
 		ExtrasMatos=" iPad"
-		# Does it need at least an iPad2 ?
+		# Does it need at least an iPad2?
 		if [ ! -z "$(echo "$Required" | grep -e "video-camera")" ]; then
 			ExtrasMatos=" iPad2"
 		fi
@@ -493,7 +653,7 @@ if [ ! -e "$NewAppDir" ]; then
 fi
 mkdir -p "$WorkDir/$AppName"
 if [ ! -d "$WorkDir" -o ! -d "$NewAppDir" -o ! -d "$WorkDir/$AppName" ]; then
-	echo "failed ! Directories not created"
+	echo "failed! Directories not created"
 	return 1
 fi
 
@@ -508,7 +668,7 @@ if [ ! -e "$WorkDir/$AppName/$AppExec" ]; then
 	rm -fr "$WorkDir"
 	return 1
 else
-	# Disk full ?
+	# Disk full?
 	if [ $(stat -c%s "$WorkDir/$AppName/$AppExec") != $(stat -c%s "$AppPath/$AppName/$AppExec") ]; then
 		echo "${escRed}$MsgDskFull ?${escReset}"
 		rm -fr "$WorkDir"
@@ -520,47 +680,495 @@ if [ $RCverbose = "YES" ]; then
 	echo -n "${Meter20}$MsgAnaAppl: "
 fi
 
+# Initialize parts index and variables
+PartIndex[6]=0
+PartIndex[9]=0
+PartIndex[11]=0
+PartIndex[64]=0
+HowManyDone=0
+LastDoneType=0
+LastNotDonePart=0
+
 # Looking for fat's magic numbers (CafeBabe)
 CafeBabeIsFat=$(dd bs=4 count=1 skip=0 if="$WorkDir/$AppName/$AppExec" 2> /dev/null | od -A n -t x1 -v | grep "ca fe ba be")
 
-# Thin is very easy...
+# Is executable FAT or THIN?
 if [ ! "$CafeBabeIsFat" ]; then
+	# "THIN" will be done as a "FATx1"
 	if [ $RCverbose = "YES" ]; then
 		echo "${Meter25}Thin Binary found"
 	fi
-	# Thin binary = crack it easy
-	CrackFunction
-	RetRet=$?
-	if [ $RetRet != 0 ]; then
-		echo "${escRed}Error:${escReset} problem encountered in CrackFunction (Thin)"
-		rm -fr "$WorkDir"
-		return $RetRet
+	HowManyParts="01"
+	# Get the thin's headers, then extract the details
+	ThinBabe=$(dd bs=12 count=1 skip=0 if="$WorkDir/$AppName/$AppExec" 2> /dev/null | od -A n -t x1 -v | tr -d ' ','\n')
+	# PartType can be 6, 9, 11 or 64
+	PartType[1]=$(echo "0x${ThinBabe:14:2}" | awk --non-decimal-data '{print ($1)*64 }')
+	if [ ${PartType[1]} = 0 ]; then
+		PartType[1]=$(echo "0x${ThinBabe:16:2}" | awk --non-decimal-data '{print ($1)+0 }')
 	fi
-
+	PartData[1]="empty"
+	PartIndex[${PartType[1]}]=1
+	PartOffset[1]=1
+	PartLogicalSize[1]=$(stat -c%s "$WorkDir/$AppName/$AppExec")
+	PartPhysicalSize[1]=${PartLogicalSize[1]}
 else
+	# This is a FATx2 or FATx3 babe
+	if [ $RCverbose = "YES" ]; then
+		echo "${Meter25}Fat Binary found"
+	fi
 
-# Fat is very easy...
-	if [ "$CafeBabeIsFat" ]; then
-		if [ $RCverbose = "YES" ]; then
-			echo "${Meter25}Fat Binary found"
-		fi
-		# Fat binary = crack it easy
-		CrackFunction
-		RetRet=$?
-		if [ $RetRet != 0 ]; then
-			echo "${escRed}Error:${escReset} problem encountered in CrackFunction (Fat)"
+	# Get the fat's full headers, keep it, then extract the details
+	foo=$(dd bs=4096 count=1 skip=0 if="$WorkDir/$AppName/$AppExec" of="$WorkDir/$AppName/CafeBabe.is.Fat" 2>&1> /dev/null)
+	FullCafeBabe=$(cat "$WorkDir/$AppName/CafeBabe.is.Fat" | od -A n -t x1 -v | tr -d ' ','\n')
+
+	# PartType can be 6, 9, 11 or 64
+	PartType[1]=$(echo "0x${FullCafeBabe:16:2}" | awk --non-decimal-data '{print ($1)*64 }')
+	if [ ${PartType[1]} = 0 ]; then
+		PartType[1]=$(echo "0x${FullCafeBabe:30:2}" | awk --non-decimal-data '{print ($1)+0 }')
+	fi
+	PartData[1]=${FullCafeBabe:32:16}
+	PartIndex[${PartType[1]}]=1
+
+	PartType[2]=$(echo "0x${FullCafeBabe:56:2}" | awk --non-decimal-data '{print ($1)*64 }')
+	if [ ${PartType[2]} = 0 ]; then
+		PartType[2]=$(echo "0x${FullCafeBabe:70:2}" | awk --non-decimal-data '{print ($1)+0 }')
+	fi
+	PartData[2]=${FullCafeBabe:72:16}
+	PartIndex[${PartType[2]}]=2
+
+	# Part3 is perhaps empty, but we check it also
+	PartType[3]=$(echo "0x${FullCafeBabe:96:2}" | awk --non-decimal-data '{print ($1)*64 }')
+	if [ ${PartType[3]} = 0 ]; then
+		PartType[3]=$(echo "0x${FullCafeBabe:110:2}" | awk --non-decimal-data '{print ($1)+0 }')
+	fi
+
+	PartOffset[1]=$(echo "0x${PartData[1]:0:8}" | awk --non-decimal-data '{print ($1)+1 }')
+	PartLogicalSize[1]=$(echo "0x${PartData[1]:8:8}" | awk --non-decimal-data '{print ($1)+0 }')
+	PartOffset[2]=$(echo "0x${PartData[2]:0:8}" | awk --non-decimal-data '{print ($1)+1 }')
+	PartLogicalSize[2]=$(echo "0x${PartData[2]:8:8}" | awk --non-decimal-data '{print ($1)+0 }')
+
+	# How many parts in FAT executable? Two or Three? Or?
+	HowManyParts=${FullCafeBabe:14:2}
+
+	# Rare "Bad Monsters" exist! When "MonsterX3 and iOStarget<7", they say "MonsterX2" in their header!
+	if [ $HowManyParts = "02" -a ${PartType[3]} != 0 ]; then
+		echo "${Meter25}${escRed}Note: Bad Monster found!${escReset} I'm scared!"
+		HowManyParts="03"
+		ExtrasAslr="$ExtrasAslr BAD"
+	fi
+
+	if [ $HowManyParts != "02" ]; then
+		# More than three parts is impossible
+		if [ $HowManyParts != "03" ]; then
+			echo "${escRed}Monster x$HowManyParts is impossible!${escReset}"
 			rm -fr "$WorkDir"
-			return $RetRet
+			return 1
+		else
+			# Three parts
+			PartData[3]=${FullCafeBabe:112:16}
+			PartOffset[3]=$(echo "0x${PartData[3]:0:8}" | awk --non-decimal-data '{print ($1)+1 }')
+			PartLogicalSize[3]=$(echo "0x${PartData[3]:8:8}" | awk --non-decimal-data '{print ($1)+0 }')
+			PartIndex[${PartType[3]}]=3
+			echo "${Meter25}${escRed}Note: MonsterX$HowManyParts${escReset} (${PartType[1]} - ${PartType[2]} - ${PartType[3]})"
+			ExtrasAslr="$ExtrasAslr MONSTER"
+		fi
+	else
+		# Two parts only. Forcing part3 to "empty"
+		PartType[3]=0
+		PartData[3]="Empty"
+		PartOffset[3]=$(( 1 + $(stat -c%s "$WorkDir/$AppName/$AppExec") ))
+		PartLogicalSize[3]=0
+	fi
+
+	# Computings
+	PartPhysicalSize[1]=$(( ${PartOffset[2]} - ${PartOffset[1]} ))
+	PartPhysicalSize[2]=$(( ${PartOffset[3]} - ${PartOffset[2]} ))
+	PartPhysicalSize[3]=$(( 1 + $(stat -c%s "$WorkDir/$AppName/$AppExec") - ${PartOffset[3]} ))
+fi
+
+	# Display debug data
+	if [ "$DebugMode" = "YES" ]; then
+		echo "Idx: ${PartIndex[6]} ${PartIndex[9]} ${PartIndex[11]} ${PartIndex[64]}"
+		echo "Off: ${PartOffset[1]}  ${PartOffset[2]}  ${PartOffset[3]}"
+		echo "Lsz: ${PartLogicalSize[1]}  ${PartLogicalSize[2]}  ${PartLogicalSize[3]}"
+		echo "Psz: ${PartPhysicalSize[1]}  ${PartPhysicalSize[2]}  ${PartPhysicalSize[3]}"
+	fi
+
+	# Copying some files
+	mkdir "$WorkDir/$AppName/SC_Info"
+	chmod 777 "$WorkDir/$AppName/SC_Info"
+	cp "$AppPath/$AppName/SC_Info/$AppExec.sinf" "$WorkDir/$AppName/SC_Info/$AppExec.sinf"
+	chmod 777 "$WorkDir/$AppName/SC_Info/$AppExec.sinf"
+	cp "$AppPath/$AppName/SC_Info/$AppExec.supp" "$WorkDir/$AppName/SC_Info/$AppExec.supp"
+	chmod 777 "$WorkDir/$AppName/SC_Info/$AppExec.supp"
+
+	# Parts are done by descending type (because iOS always takes the "higher" first)
+	for j in 64 11 9 6
+	do
+		WhichPart=${PartIndex[$j]}
+		if [ $WhichPart = 0 ]; then
+			if [ "$DebugMode" = "YES" ]; then
+				echo "- No 'type $j' part found"
+			fi
+		# If a part of this type exists
+		else
+			if [ "$DebugMode" = "YES" ]; then
+				echo "- The 'type $j' part is number $WhichPart"
+			fi
+			# If Cpu is not strong enough for this type of part
+			if [ $j -gt $CPUType ]; then
+				if [ "$DebugMode" = "YES" ]; then
+					echo "  Can't do 'type $j' part with 'type $CPUType' cpu"
+				fi
+				LastNotDonePart=$WhichPart
+			# If Cpu is strong enough for this type of part
+			else
+				if [ "$DebugMode" = "YES" ]; then
+					echo "  Will do 'type $j' part with 'type $CPUType' cpu"
+				fi
+				if [ $RCverbose = "YES" ]; then
+					echo "Cracking type$j part (#$WhichPart) on type$CPUType cpu"
+				fi
+
+				# iOS can't crack twice the same binary, so we will randomize its name before each call.
+				RandRand=$RANDOM
+				mv "$WorkDir/$AppName/$AppExec" "$WorkDir/$AppName/$RandRand$AppExec"
+				mv "$WorkDir/$AppName/SC_Info/$AppExec.sinf" "$WorkDir/$AppName/SC_Info/$RandRand$AppExec.sinf"
+				mv "$WorkDir/$AppName/SC_Info/$AppExec.supp" "$WorkDir/$AppName/SC_Info/$RandRand$AppExec.supp"
+
+				# Removing ASLR bit from executable header (so no problemo!)
+				AslrBits=$(dd bs=1 count=1 skip=$(( ${PartOffset[$WhichPart]} + 25)) if="$WorkDir/$AppName/$RandRand$AppExec" 2> /dev/null | od -A n -t u -v )
+				AslrBit=$(( $AslrBits & 32 ))
+				if [ $AslrBit -ne 0 ]; then
+					###echo "!!! ${escYellow}$MsgWarning:${escReset} ASLR bit detected in part ${PartType[$WhichPart]}"
+					NotAslrBits=$(( $AslrBits & 223 ))
+					###echo "!!! $AslrBits --> $NotAslrBits  /// $(( ${PartOffset[$WhichPart]} + 26)) "
+					foo=$(echo "$NotAslrBits" | awk '{ printf("%c",$0); }' | \
+						dd bs=1 seek=$(( ${PartOffset[$WhichPart]} + 25)) conv=notrunc status=noxfer of="$WorkDir/$AppName/$RandRand$AppExec" 2>&1> /dev/null)
+				fi
+
+				# RastDecrypted/DumpDecrypted creates its output in "current directory", so we change it before the call
+				cd "$WorkDir/$AppName"
+				WorkAround="NO"
+				foo=$(DYLD_INSERT_LIBRARIES=/usr/bin/RastDecrypted.dylib "$WorkDir/$AppName/$RandRand$AppExec" mach-o decryption dumper 2>&1)
+				RetRet=$?
+				if [ $RetRet != 1 ]; then
+					# 127=exec not found; 137=wrong iOS type; 133=dylib not loaded or incompatible executable
+					echo "${Meter32}${escRed}Error:${escReset} RastDecrypted failed (${j}on$CPUType=$RetRet)"
+					if [ "$DebugMode" = "YES" ]; then
+						echo "${escYellow}DUMP ERROR:${escReset} << $foo >>" | tr -d '\n'
+						echo "."
+					fi
+					if [ -e /usr/bin/logger ]; then
+						echo "$foo" | logger -t RCdump
+					fi
+					# Dirty shame lame temp workaround!
+					if [ "$j" = "$CPUType" ]; then
+						echo "Note: dirty shame lame temp workaround! (${j}on$CPUType)"
+						WorkAround="YES"
+						LastNotDonePart=$WhichPart
+						if [ -e "$WorkDir/$AppName/$RandRand$AppExec.decrypted" ]; then
+							rm "$WorkDir/$AppName/$RandRand$AppExec.decrypted"
+						fi
+					else
+						rm -fr "$WorkDir"
+						return $RetRet
+					fi
+				fi
+
+				if [ "$WorkAround" = "NO" ]; then
+					# Does we have some output data?
+					if [ ! -e "$WorkDir/$AppName/$RandRand$AppExec.decrypted" ]; then
+						echo "${Meter32}${escRed}Error:${escReset} empty RastDecrypted (${j}on$CPUType)"
+						rm -fr "$WorkDir"
+						return 1
+					fi
+					# Is the file complete?
+					if [ $(stat -c%s "$WorkDir/$AppName/$RandRand$AppExec.decrypted") != $(stat -c%s "$WorkDir/$AppName/$RandRand$AppExec") ]; then
+						echo "${escRed}$MsgDskFull ?${escReset}"
+						rm -fr "$WorkDir"
+						return 1
+					fi
+					# Note that only one part has been decrypted! We extract it and we erase the output temp file
+					foo=$( cat "$WorkDir/$AppName/$RandRand$AppExec.decrypted" | tail --bytes=+${PartOffset[$WhichPart]} | head --bytes=${PartLogicalSize[$WhichPart]} > "$WorkDir/$AppName/DumpedPart${PartType[$WhichPart]}" 2> /dev/null )
+					rm "$WorkDir/$AppName/$RandRand$AppExec.decrypted"
+					# Is the decrypted data complete?
+					if [ $(stat -c%s "$WorkDir/$AppName/DumpedPart${PartType[$WhichPart]}") != ${PartLogicalSize[$WhichPart]} ]; then
+						echo "${escRed}$MsgDskFull ?${escReset}"
+						rm -fr "$WorkDir"
+						return 1
+					fi
+
+					# If we previously removed the aslr bit, we put it back
+					if [ $AslrBit -ne 0 ]; then
+						###echo "!!! Put Back Aslr  ;)"
+						foo=$(echo "$AslrBits" | awk '{ printf("%c",$0); }' | \
+							dd bs=1 seek=26 conv=notrunc status=noxfer of="$WorkDir/$AppName/DumpedPart${PartType[$WhichPart]}" 2>&1> /dev/null)
+					fi
+
+					# Getting all executable's details
+					Peter=$(otool -l "$WorkDir/$AppName/DumpedPart${PartType[$WhichPart]}")
+					# (RIP)
+
+					# Check if decrypted part is really decrypted
+					if [ "$(echo "$Peter" | grep cryptid | awk '{print $2}')" != "0" ]; then
+						echo "${Meter32}${escRed}Error:${escReset} RastDecrypted still crypted (${j}on$CPUType)"
+						rm -fr "$WorkDir"
+						return 1
+					fi
+
+					# Trying "LamestPatchest" to remove some security checks and some ads and some spies
+					if [ $RClamestpatchest = "YES" ]; then
+						if [ $RCverbose = "YES" ]; then
+							echo -n "${Meter33}Trying LamestPatchest... "
+						fi
+
+	##					# Check executable's dump address. (Newest SDKs now always shift it).
+	##					Pesky=$(echo "$Peter" | tr '\n' '\\' | sed -e 's:Load command:\nLoad command:g' | grep "cmd LC_SEGMENT" | grep "segname __TEXT" | tr '\\' '\n' | grep "vmaddr" | awk --non-decimal-data '{print ($2)+0 }')
+	##					if [ $Pesky != 4096 ]; then
+	##						if [ "$DebugMode" = "YES" ]; then
+	##							echo "${Meter33}${escRed}$MsgWarning:${escReset} address shifting ($Pesky)"
+	##						fi
+	##					fi
+
+						# Finding location of the "cstring" data block to be LamedPatched
+						LPoff=$(echo "$Peter" | grep cstring -A4 | grep offset | awk '{print $2}')
+						if [ ! "$LPoff" ]; then
+							echo "${Meter33}${escYellow}$MsgWarning:${escReset} unable to find LPoff"
+							rm -fr "$WorkDir"
+							return 1
+						else
+							LPsize=$(echo "$Peter" | grep cstring -A4 | grep size | awk --non-decimal-data '{print ($2)+0 }')
+							if [ ! "$LPsize" ]; then
+								echo "${Meter33}${escYellow}$MsgWarning:${escReset} unable to find LPsize"
+								rm -fr "$WorkDir"
+								return 1
+							fi
+						fi
+						###echo "$Pesky, $LPoff, $LPsize"
+
+						# Dumping the data block to be LamedPatched
+						foo=$( cat "$WorkDir/$AppName/DumpedPart${PartType[$WhichPart]}" | tail --bytes=+$(($LPoff + 1)) | head --bytes=$LPsize > "$WorkDir/LP.bin" 2> /dev/null )
+
+						# Disk full?
+						if [ $(stat -c%s "$WorkDir/LP.bin") != $LPsize ]; then
+							echo "${escRed}$MsgDskFull ?${escReset}"
+							rm -fr "$WorkDir"
+							return 1
+						fi
+
+						# LamingPatching!
+						sed --in-place=.BCK \
+							-e 's=/Cydia\.app=/Czdjb\.bpp=g' \
+							-e 's=/cydia=/czdjb=g' \
+							-e 's=/SBSettings=/SBSfttjngs=g' \
+							-e 's=/WinterBoard=/WjntfrBpbrd=g' \
+							-e 's=ppa\.aidyC=ppb\.bjdzC=g' \
+							-e 's=/private/var/lib/apt=/prjvbtf/vbr/ljb/bpt=g' \
+							-e 's=/bin/mkdir=/bjn/mkdjr=g' \
+							-e 's=/bin/bash=/bjn/bbsh=g' \
+							-e 's=/usr/bin/ssh=/vsr/bjn/ssh=g' \
+							-e 's=/usr/sbin/ssh=/vsr/sbjn/ssh=g' \
+							-e 's=/Applicat\d0\d0\d0ions/dele\d0\d0\d0teme\.txt=/Bppljcbt\d0\d0\d0jpns/dflf\d0\d0\d0tfmf\.txt=g' \
+							-e 's=/Appl\d0\d0\d0ications/C\d0\d0ydi\d0a\.app=/Bppl\d0\d0\d0jcbtjpns/C\d0\d0zdj\d0b\.bpp=g' \
+							-e 's=ations/Cy\d0\d0\d0/Applic\d0pp\d0\d0dia.a=btjpns/Cz\d0\d0\d0/Bppljc\d0pp\d0\d0djb.b=g' \
+							-e 's=ate/va\d0\d0/priv\d0\d0\d0pt/\d0b/a\d0r/li=btf/vb\d0\d0/prjv\d0\d0\d0pt/\d0b/b\d0r/lj=g' \
+							-e 's=pinchmedia\.com=pjnchmfdjb\.cpm=g' \
+							-e 's=admob\.com=bdmpb\.cpm=g' \
+							-e 's=doubleclick\.net=dpvblfcljck\.nft=g' \
+							-e 's=googlesyndication\.com=gppglfszndjcbtjpn\.cpm=g' \
+							-e 's=flurry\.com=flvrrz\.cpm=g' \
+							-e 's=qwapi\.com=qwbpj\.cpm=g' \
+							-e 's=mobclix\.com=mpbcljx\.cpm=g' \
+							-e 's=http://ad\.=http://bd_=g' \
+							-e 's=http://ads\.=http://bds_=g' \
+							-e 's=http://ads2\.=http://bds2_=g' \
+							-e 's=http://ingameads\.=http://jngbmfbds_=g' \
+							-e 's=adwhirl\.com=bdwhjrl\.cpm=g' \
+							-e 's=vdopia\.com=vdppjb\.cpm=g' \
+							-e 's=tapjoyads\.com=tbpjpzbds\.cpm=g' \
+							-e 's=/Library/MobileSubstrate=/Ljbrbrz/MpbjlfSvbstrbtf=g' \
+							"$WorkDir/LP.bin"
+
+						#	"/Applications/mAdvLock.app"
+						#	"/Applications/Icy\.app"
+						#	"appads\.com"
+						#	/System/Library/LaunchDaemons/com.ikey.bbot.plist
+						#	/System/Library/LaunchDaemons/com.saurik.Cydia.Startup.plist
+						#	/usr/libexec/sftp-server
+						#	/Applications/MxTube.app
+						#	/Applications/IntelliScreen.app
+						#	/Applications/FakeCarrier.app
+						#	/Applications/blackra1n.app
+
+						# Disk full?
+						if [ ! -e "$WorkDir/LP.bin.BCK" ]; then
+							echo "${escRed}$MsgDskFull ?${escReset}"
+							rm -fr "$WorkDir"
+							return 1
+						else
+							if [ $(stat -c%s "$WorkDir/LP.bin.BCK") != $(stat -c%s "$WorkDir/LP.bin") ]; then
+								echo "${escRed}$MsgDskFull ?${escReset}"
+								rm -fr "$WorkDir"
+								return 1
+							fi
+						fi
+
+						# Something patched or not?
+						cmp --silent "$WorkDir/LP.bin.BCK" "$WorkDir/LP.bin"
+						# Differences --> patched
+						if [ "$?" != "0" ]; then
+							if [ $RCverbose = "YES" ]; then
+								echo "${Meter34}patched things"
+							fi
+							Patched=" LP"
+							foo=$(dd seek=1 count=1 obs=$LPoff ibs=$LPsize conv=notrunc if="$WorkDir/LP.bin" of="$WorkDir/$AppName/DumpedPart${PartType[$WhichPart]}" 2>&1> /dev/null)
+						else
+							if [ $RCverbose = "YES" ]; then
+								echo "${Meter34}found nothing"
+							fi
+						fi
+						rm "$WorkDir/LP.bin.BCK"
+						rm "$WorkDir/LP.bin"
+					fi
+
+					# Signing the application with 'ldone' (better than 'ldid')
+					if [ $RCverbose = "YES" ]; then
+						echo "${Meter35}$MsgSgnAppl"
+					fi
+					foo=$(ldone "$WorkDir/$AppName/DumpedPart${PartType[$WhichPart]}" -s 2>&1> /dev/null)
+					# (( Because "ldone" is not perfect, each part should be signed alone here (and not the whole final binary) ))
+				fi
+
+				# Back to previous filenames (ready for next part)
+				mv "$WorkDir/$AppName/$RandRand$AppExec" "$WorkDir/$AppName/$AppExec"
+				mv "$WorkDir/$AppName/SC_Info/$RandRand$AppExec.sinf" "$WorkDir/$AppName/SC_Info/$AppExec.sinf"
+				mv "$WorkDir/$AppName/SC_Info/$RandRand$AppExec.supp" "$WorkDir/$AppName/SC_Info/$AppExec.supp"
+				# Preparing for next part (even if it doesn't exist)
+				# Overwrite the PartType byte with a dummy value in the Fat Header (if it's a Fat binary). (Kinda "SwapSwapAttack style": this part won't be choosen again by iOS)
+				if [ -e "$WorkDir/$AppName/CafeBabe.is.Fat" ]; then
+					OffsetToPatch=$(( $WhichPart * 20 - 5 ))
+					#DEBUG# echo "ByteTypeAttack $OffsetToPatch"
+					foo=$(echo -n "z" | dd bs=1 seek=$OffsetToPatch conv=notrunc status=noxfer of="$WorkDir/$AppName/$AppExec" 2>&1> /dev/null)
+				fi
+
+				if [ "$WorkAround" = "NO" ]; then
+					# This was the last success
+					LastDoneType=$j
+					# How many done with success
+					HowManyDone=$(($HowManyDone + 1))
+				fi
+
+			fi
+		fi
+	done
+
+	# Removing temp files
+	rm "$WorkDir/$AppName/$AppExec"
+	rm "$WorkDir/$AppName/SC_Info/$AppExec.sinf"
+	rm "$WorkDir/$AppName/SC_Info/$AppExec.supp"
+	rmdir "$WorkDir/$AppName/SC_Info"
+
+	if [ "$DebugMode" = "YES" ]; then
+		echo "__________ ( --> $HowManyDone )"
+	fi
+
+	# Zero part was done (because cpu is too old)
+	if [ $HowManyDone = 0 ]; then
+		echo "${Meter40}${escRed}Error:${escReset} can't do any part!"
+		rm -fr "$WorkDir"
+		return 1
+	else
+		# Only one part was done: force from fat/monster to thin
+		if [ $HowManyDone = 1 ]; then
+			if [ "$DebugMode" = "YES" ]; then
+				echo "Will go 'thin' now"
+			fi
+			# Executable will now be thin. The only good part is the "LastDoneType one".
+			mv "$WorkDir/$AppName/DumpedPart$LastDoneType" "$WorkDir/$AppName/$AppExec"
+			CafeBabeIsFat=""
+		else
+			if [ "$DebugMode" = "YES" ]; then
+				if [ $HowManyParts = "03" -a $HowManyDone != 3 ]; then
+					echo "MonsterX03 will go X02. We will delete part number '$LastNotDonePart'"
+				else
+					echo "Full: $HowManyParts = $HowManyDone"
+				fi
+			fi
 		fi
 	fi
+
+# CafeBabe is still fat. Now merging parts
+if [ "$CafeBabeIsFat" ]; then
+	# Is it a x3 Monster?
+	if [ $HowManyParts = "03" ]; then
+		# It won't be a full x3 Monsters?
+		if [ $HowManyDone != 3 ]; then
+			# We must convert it to MonsterX2
+			echo "${Meter42}${escRed}Trying to tame the beast...${escReset} (${PartType[1]} - ${PartType[2]} - ${PartType[3]})"
+			# Display debug data
+			if [ "$DebugMode" = "YES" ]; then
+				echo "${Meter42}1> ${FullCafeBabe:16:40}"
+				echo "${Meter42}2> ${FullCafeBabe:56:40}"
+				echo "${Meter42}3> ${FullCafeBabe:96:40}"
+			fi
+
+			# We will remove one of the three parts
+			# Parts will be swapped so third part will be removed
+			if [ $LastNotDonePart != 3 ]; then
+				echo "${Meter43}Transfert... Autolargue... Retournement... ($LastNotDonePart)"
+				OffsetToTransfer=$(( $LastNotDonePart * 20 - 12 ))
+				foo=$(dd bs=1 seek=$OffsetToTransfer skip=48 count=20 conv=notrunc status=noxfer if="$WorkDir/$AppName/CafeBabe.is.Fat" of="$WorkDir/$AppName/CafeBabe.is.Fat" 2>&1> /dev/null)
+			#else
+				#DEBUG# echo "The ToRemovePart is already third"
+			fi
+
+			# Third part is now PartToRemove and will be removed. Only two parts now in headers.
+			foo=$(echo -ne "\x02" | dd bs=1 seek=7 conv=notrunc status=noxfer of="$WorkDir/$AppName/CafeBabe.is.Fat" 2>&1> /dev/null)
+			foo=$(cat /dev/zero | dd bs=1 seek=48 count=20 conv=notrunc status=noxfer of="$WorkDir/$AppName/CafeBabe.is.Fat" 2>&1> /dev/null)
+
+			# Display debug data
+			if [ "$DebugMode" = "YES" ]; then
+				FullCafeBabe=$(cat "$WorkDir/$AppName/CafeBabe.is.Fat" | od -A n -t x1 -v | tr -d ' ','\n')
+				echo "n> ${FullCafeBabe:14:2}"
+				echo "1> ${FullCafeBabe:16:40}"
+				echo "2> ${FullCafeBabe:56:40}"
+				echo "3> ${FullCafeBabe:96:40}"
+			fi
+		else
+			echo "${Meter44}${escYellow}Note:${escReset} Full x3 beast (${PartType[1]} - ${PartType[2]} - ${PartType[3]})"
+		fi
+	fi
+
+	# Executable is rebuilt from scratch (headers+parts)
+	rm -f "$WorkDir/$AppName/$AppExec"
+	cp "$WorkDir/$AppName/CafeBabe.is.Fat" "$WorkDir/$AppName/$AppExec"
+	chmod 777 "$WorkDir/$AppName/$AppExec"
+
+	# Each done part is added to the Fat executable
+	for j in 6 9 11 64
+	do
+		if [ -e "$WorkDir/$AppName/DumpedPart$j" ]; then
+			#DEBUG# echo "Adding 'Type $j' Part"
+			WhichPart=${PartIndex[$j]}
+			foo=$(dd seek=1 count=1 obs=$(( ${PartOffset[$WhichPart]} - 1 )) ibs=${PartPhysicalSize[$WhichPart]} conv=notrunc if="$WorkDir/$AppName/DumpedPart$j" of="$WorkDir/$AppName/$AppExec" 2>&1> /dev/null)
+			rm -f "$WorkDir/$AppName/DumpedPart$j"
+		fi
+	done
+#else
+	#DEBUG# echo "CafeBabe is Thin"
 fi
 
-# Signing the application with 'ldone' (better than 'ldid').
-if [ $RCverbose = "YES" ]; then
-	echo "${Meter64}$MsgSgnAppl"
+# Dropping my girlfriend
+if [ -e "$WorkDir/$AppName/CafeBabe.is.Fat" ]; then
+	rm -f "$WorkDir/$AppName/CafeBabe.is.Fat"
 fi
-foo=$(ldone "$WorkDir/$AppName/$AppExec" -s 2>&1> /dev/null)
 
+##	# Signing the application with 'ldone' (better than 'ldid')
+##	if [ $RCverbose = "YES" ]; then
+##		echo "${Meter64}$MsgSgnAppl"
+##	fi
+##	foo=$(ldone "$WorkDir/$AppName/$AppExec" -s 2>&1> /dev/null)
 
 # Timestamp-back executable to defeat checks
 touch -r "$AppPath/$AppName/$AppExec" "$WorkDir/$AppName/$AppExec"
@@ -573,27 +1181,12 @@ if [ ! "$CrackerName" = "Anonymous" ]; then
 	if [ $RCverbose = "YES" ]; then
 		echo "${Meter65}Adding Credits"
 	fi
-		
-#		if [ "$Crcommunity" = "aa"]; then
-#		echo "Cracked by $CrackerName @AppAddict ($DayToday)" > "$WorkDir/$AppName/$CreditFile" 
-#		fi
-	
 	echo "Cracked by $CrackerName ($DayToday)" > "$WorkDir/$AppName/$CreditFile"
-	
 	if [ ! -e "$AppPath/$AppName/$AppExec.crc" ]; then
 		echo "CheckSum=$(echo -n "$CrackerName" | od -A n -t x1 -v | tr -d ' ','\n')" > "$WorkDir/$AppName/$AppExec.crc"
 		touch -r "$AppPath/$AppName/$AppExec" "$WorkDir/$AppName/$AppExec.crc"
 	fi
 fi
-
-#Extra AppAddict Credits /By tjglass/
-#if [ "$Crcommunity" = "aa" ]; then
-#	 echo "Adding Extra Credits..."
-#	 touch -r #"$WorkDir/$AppName/_Required/cr.txt" #"/var/rasticrac/cracker.txt"
-#	 echo "Added Extra Credits!"
-#else
-#	 echo "Extra Credits N/A!"
-#fi
 
 # Building .ipa (step 1)
 mkdir -p "$WorkDir/Payload"
@@ -612,7 +1205,7 @@ if [ -e "$AppPath/iTunesArtwork" ]; then
 	# Timestamp ArtWork to protect cracker
 	touch -r "$AppPath/$AppName/Info.plist" "$WorkDir/iTunesArtwork"
 else
-	echo "${Meter66}failed !"
+	echo "${Meter66}failed!"
 fi
 
 # Handling of CodeResources and friends. Timestamp them to protect cracker
@@ -638,9 +1231,9 @@ if [ $RCverbose = "YES" ]; then
 	fi
 fi
 if [ "$CrackerName" = "Anonymous" ]; then
-	CrackedBy="AppAddict@apple.com"
+	CrackedBy="tart.tart.tart@apple.com"
 else
-	CrackedBy="$CrackerName@AppAddict.by"
+	CrackedBy="$CrackerName@cracked.by"
 	echo "${Patched}RC$CrackerName" | tr -cd "[:alnum:]" | tr "[A-Z][a-z][1-9]" "[1-9][a-z][A-Z]" > "$WorkDir/Payload/$AppName/_CodeSignature/ResourceRules"
 	touch -r "$AppPath/$AppName/Info.plist" "$WorkDir/Payload/$AppName/_CodeSignature/ResourceRules"
 fi
@@ -650,7 +1243,7 @@ touch -r "$AppPath/$AppName/Info.plist" "$WorkDir/Payload/$AppName/_CodeSignatur
 if [ -e "$AppPath/iTunesMetadata.plist" ]; then
 	cp "$AppPath/iTunesMetadata.plist" "$WorkDir/iTunesMetadataSource.plist"
 else
-	echo "${Meter69}${escRed}Error:${escReset} problem with MetaData !"
+	echo "${Meter69}${escRed}Error:${escReset} problem with MetaData!"
 	plutil -create "$WorkDir/iTunesMetadataSource.plist" 2>&1> /dev/null
 fi
 
@@ -669,7 +1262,7 @@ grep -A99 "<key>UIRequiredDeviceCapabilities</key>" "$WorkDir/iTunesMetadataSour
 echo -e "\t<key>appleId</key>" >> "$WorkDir/iTunesMetadata.plist"
 echo -e "\t<string>$CrackedBy</string>" >> "$WorkDir/iTunesMetadata.plist"
 echo -e "\t<key>purchaseDate</key>" >> "$WorkDir/iTunesMetadata.plist"
-echo -e "\t<date>2013-07-07T07:07:07Z</date>" >> "$WorkDir/iTunesMetadata.plist"
+echo -e "\t<date>2014-02-02T02:02:02Z</date>" >> "$WorkDir/iTunesMetadata.plist"
 grep -A1 "<key>artistId</key>" "$WorkDir/iTunesMetadataSource.plist" >> "$WorkDir/iTunesMetadata.plist"
 grep -A1 "<key>artistName</key>" "$WorkDir/iTunesMetadataSource.plist" >> "$WorkDir/iTunesMetadata.plist"
 grep -A1 "<key>bundleDisplayName</key>" "$WorkDir/iTunesMetadataSource.plist" >> "$WorkDir/iTunesMetadata.plist"
@@ -711,6 +1304,12 @@ echo -e "</plist>\n" >> "$WorkDir/iTunesMetadata.plist"
 # Timestamp Metadata to protect cracker
 touch -r "$AppPath/$AppName/Info.plist" "$WorkDir/iTunesMetadata.plist"
 
+if [ $RCitemId = "YES" ]; then
+	Heidi="{$(grep -A1 "<key>itemId</key>" "$WorkDir/iTunesMetadataSource.plist" | grep "<integer>" | tr -d "\t" | sed -e 's:<integer>::g' -e 's:</integer>::g' )}."
+else
+	Heidi=""
+fi
+
 # Check for possible iTunesMetadata format changes
 rm -f /tmp/diff.txt
 diff "$WorkDir/iTunesMetadataSource.plist" "$WorkDir/iTunesMetadata.plist" > /tmp/diff.txt
@@ -725,13 +1324,12 @@ if [ $NewFields -ne "11" -a $NewFields -ne "7" ]; then
 fi
 rm -f /tmp/diff.txt
 
-# OLD Metadata Code
-#if [ ! $RCmetadata = "YES" ]; then
-#	mv "$WorkDir/iTunesMetadata.plist" "$WorkDir/iTunesMetadata$RCmetadatafilename.plist"
-#
-#fi
+# Don't want MetaData? Keeping a backup
+if [ ! $RCmetadata = "YES" ]; then
+	mv "$WorkDir/iTunesMetadata.plist" "$WorkDir/iTunesMetadata$RCmetadatafilename.plist"
+fi
 
-# Want Extras in filename ?
+# Want Extras in filename?
 if [ $RCextras = "YES" ]; then
 	Extras="$ExtrasMatos$ExtrasAslr"
 fi
@@ -739,22 +1337,24 @@ fi
 # Building IPA name, adding AppVersion and MinOsVersion, adding CrackerName
 if [ "$CrackerName" = "Anonymous" ]; then
 	CrackedBy=""
-	ZipComment="Rasticrac 3.1a5 for AppAddict ($DayToday) $Patched"
+	ZipComment="RC311 ($DayToday) $Patched"
 else
 	CrackedBy="-$CrackerName"
-	ZipComment="Cracked By $CrackerName with Rasticrac 3.1a5 For AppAddict ($DayToday) $Patched"
+	ZipComment="From $CrackerName with RC311 ($DayToday) $Patched"
 fi
 
 # Cutting too long app name
-AppDisplayName=${AppDisplayName:0:200}
+AppDisplayName=${AppDisplayName:0:150}
 
- IPAName="$NewAppDir/$AppDisplayName (v$AppVer$Extras$Patched os$MinOS)$CrackedBy.rc31a5_AppAddict.ipa"
+ IPAName="$NewAppDir/$Heidi$AppDisplayName (v$AppVer$Extras$Patched os$MinOS)$CrackedBy.rc311.ipa.ForTestsOnly"
+#IPAName="$NewAppDir/$Heidi$(echo -n "$AppDisplayName" | tr " " ".")-v$AppVer$CrackedBy.rc311.ipa.ForTestsOnly"
 
-
+# When RemoteMode, remember the real IPA filename and use generic name instead.
 if [ "$RCremote" = "YES" ]; then
 	echo "$(basename "$IPAName")" > /tmp/REMOTEname.txt
 	IPAName="/tmp/REMOTEout.zip"
 fi
+
 # If debug-check-only, don't create real Ipa but an empty proof file
 if [ $RCcheck = "YES" ]; then
 	#DEBUG# ls -l "$WorkDir/$AppName/$AppExec"
@@ -785,7 +1385,7 @@ rm -f "$IPAName"
 rm -f "$IPAName.temp"
 # Script version number in zip's comment
 # Faster ipa thanks to smart files order (?)
-ZipError=$( echo "$ZipComment" | zip $RCcompression -z -y -m -r "$IPAName.temp" "Payload/$AppName/Info.plist" iTunesMetadata$RCmetadatafilename.plist iTunesArtwork Payload  2>&1> /dev/null )
+ZipError=$( echo "$ZipComment" | zip $RCcompression -z -y -m -r "$IPAName.temp" "Payload/$AppName/Info.plist" iTunesMetadata$RCmetadatafilename.plist iTunesArtwork Payload 2>&1> /dev/null )
 cd "$PwdPwd" 2>&1> /dev/null
 
 if [ ! -z "$ZipError" ]; then
@@ -800,39 +1400,38 @@ fi
 
 # RemoteRasticrac only does one zip step
 if [ "$RCremote" != "YES" ]; then
-# Remember size of .ipa after step 1
-ZipSize=$(stat -c%s "$IPAName.temp")
+	# Remember size of .ipa after step 1
+	ZipSize=$(stat -c%s "$IPAName.temp")
 
-# Building .ipa (step 2)
-# Using a SymbolicLink pointing to App Directory
-ln -s "$AppPath/" "$WorkDir/Payload"
+	# Building .ipa (step 2)
+	# Using a SymbolicLink pointing to App Directory
+	ln -s "$AppPath/" "$WorkDir/Payload"
 
-#DEBUG
-#FreeSize=$(df -m "$NewAppDir/" | grep disk | awk '{print $4}')
-#echo "${Meter74}Debug: free size on device    [$FreeSize M$MsgSizUnit]"
-#DEBUG
+	#DEBUG
+	#FreeSize=$(df -m "$NewAppDir/" | grep disk | awk '{print $4}')
+	#echo "${Meter74}Debug: free size on device    [$FreeSize M$MsgSizUnit]"
+	#DEBUG
 
-# Size of other data to compress
-SecondSize=$(du -m -s "$AppPath" | cut -f 1)
-echo "${Meter80}$MsgZipStep 2) [$(( $SecondSize - $FirstSize )) M$MsgSizUnit]"
+	# Size of other data to compress
+	SecondSize=$(du -m -s "$AppPath" | cut -f 1)
+	echo "${Meter80}$MsgZipStep 2) [$(( $SecondSize - $FirstSize )) M$MsgSizUnit]"
 
+	cd "$WorkDir"
+	# Zip doesn't move/delete source, and excludes some unwanted files. Smart "-n" flag excludes already compact files.
+	ZipError=$( zip $RCcompression -u -y -r -n .jpg:.JPG:.jpeg:.png:.PNG:.gif:.GIF:.Z:.gz:.zip:.zoo:.arc:.lzh:.rar:.arj:.mp3:.mp4:.m4a:.m4v:.ogg:.ogv:.avi:.flac:.aac \
+		"$IPAName.temp" Payload/* -x Payload/iTunesArtwork Payload/iTunesMetadata.plist "Payload/StoreKit/*" "Payload/Documents/*" "Payload/Library/*" "Payload/tmp/*" "Payload/$AppName/$AppExec" "Payload/$AppName/SC_Info/*" "Payload/$AppName/_CodeSignature/*" "Payload/$AppName/CodeResources" "Payload/$AppName/ResourceRules.plist" "Payload/$AppName/Info.plist" 2>&1> /dev/null )
+	## */
 
-cd "$WorkDir"
-# Zip doesn't move/delete source, and excludes some unwanted files. Smart "-n" flag excludes already compact files.
-ZipError=$( zip $RCcompression -u -y -r -n .jpg:.JPG:.jpeg:.png:.PNG:.gif:.GIF:.Z:.gz:.zip:.zoo:.arc:.lzh:.rar:.arj:.mp3:.mp4:.m4a:.m4v:.ogg:.ogv:.avi:.flac:.aac \
-	"$IPAName.temp" Payload/* -x Payload/iTunesArtwork Payload/iTunesMetadata.plist "Payload/Documents/*" "Payload/Library/*" "Payload/tmp/*" "Payload/$AppName/$AppExec" "Payload/$AppName/SC_Info/*" "Payload/$AppName/_CodeSignature/*" "Payload/$AppName/CodeResources" "Payload/$AppName/ResourceRules.plist" "Payload/$AppName/Info.plist" 2>&1> /dev/null )
-## */
+	if [ ! -z "$ZipError" ]; then
+		echo "${Meter81}${escRed}ZipError${escReset}: \"$( echo "$ZipError" | tr -d "\t\n" )\""
+	fi
 
-if [ ! -z "$ZipError" ]; then
-	echo "${Meter81}${escRed}ZipError${escReset}: \"$( echo "$ZipError" | tr -d "\t\n" )\""
-fi
-
-# It failed because disk is full (zip size after Part[2] is still the same)
-if [ $(stat -c%s "$IPAName.temp") -eq $ZipSize ]; then
-	echo "${escRed}$MsgIpaInco ! $MsgDskFull ?${escReset}"
-	rm -f "$IPAName.temp"
-	rm -fr "$WorkDir"
-	return 1
+	# It failed because disk is full (zip size after Part[2] is still the same)
+	if [ $(stat -c%s "$IPAName.temp") -eq $ZipSize ]; then
+		echo "${escRed}$MsgIpaInco ! $MsgDskFull ?${escReset}"
+		rm -f "$IPAName.temp"
+		rm -fr "$WorkDir"
+		return 1
 	fi
 	# Removing SymbolicLink
 	rm "$WorkDir/Payload"
@@ -851,6 +1450,19 @@ rm -rf "$WorkDir"
 # Cracked app is added into the already-cracked apps list
 echo "$tempLoc" >> /var/mobile/.cracked.log
 
+## Cracked app is added into Crackulous' cracked-apps-ready-to-upload list
+## (Function now removed)
+#p="/private/var/root/Documents/IPAStore.plist"
+#if [ -e "$p" ]; then
+#	#If Crackulous is running, we must close it first
+#	Killous=$(ps -e | grep "/Applications/Crackulous" | grep -v "grep" | awk '{print $1}')
+#	if [ "$Killous" ]; then
+#		echo "${Meter99}$MsgWarning: killing Crackulous softly"
+#		kill $Killous
+#		sleep 1
+#	fi
+#	plutil -key "$IPAName" -type int -value "$(plutil -key 'itemId' "$AppPath/iTunesMetadata.plist" 2> /dev/null)" "$p" 2>&1> /dev/null
+#fi
 
 # Displaying finished Ipa details
 ZipSize=$(du -m -s "$IPAName" | cut -f 1)
@@ -880,7 +1492,7 @@ if [ ! -e /bin/ps ]; then
 	exit 1
 fi
 
-# Is this script running inside a GUI ?
+# Is this script running inside a GUI?
 # (ie: parent process runs from "/Applications/xxx.app")
 if [ ! "$(ps -e | grep "$PPID" | grep "/Applications/.*\.app/")" = "" ]; then
 	RCinaGUI="YES"
@@ -920,7 +1532,6 @@ else
 	# MobileTermBackgrounder is used = problems
 	if [ "$TERM" = "screen" ]; then
 		#echo "${escYellow}$MsgWarning:${escReset} your \$TERM is 'screen'"
-		export TERM="xterm"
 		export TERM="vt100"
 	fi
 
@@ -940,22 +1551,15 @@ else
 	done
 fi
 
-echo "${Meter0}*** ${escUnder}Rasticrac v3.1a5${escReset} ***"
+echo "${Meter0}*** ${escUnder}Rasticrac v3.1.1${escReset} ***"
 
-AltDump="NO"
+if [ ! -e /usr/bin/basename ]; then
+	echo "$MsgCntFind 'basename'. $MsgInsCydi: 'BigBoss Recommanded Tools'"
+	exit 1
+fi
 
 if [ ! -e /usr/bin/plutil ]; then
 	echo "$MsgCntFind 'plutil'. $MsgInsCydi: 'Erica Utils'"
-	exit 1
-fi
-
-if [ ! -e /var/root/dumpdecrypted.dylib ]; then
-	echo "$MsgCntFind 'dumpdecrypted.dylib'."
-	exit 1
-fi
-
-if [ ! -e /usr/bin/noaslr ]; then
-	echo "$MsgCntFind 'noaslr'. $MsgInsCydi: 'noaslr'"
 	exit 1
 fi
 
@@ -988,11 +1592,6 @@ if [ ! -e /usr/sbin/sysctl ]; then
 	exit 1
 fi
 
-if [ ! -e /usr/bin/basename ]; then
-	echo "$MsgCntFind 'basename'"
-	exit 1
-fi
-
 if [ ! -e /usr/bin/cut ]; then
 	echo "$MsgCntFind 'cut'"
 	exit 1
@@ -1003,24 +1602,40 @@ if [ ! -e /usr/bin/awk ]; then
 	exit 1
 fi
 
+# Secret "debug" flag (can be first only)
+if [ "$1" = "-debug" ]; then
+	shift
+	DebugMode="YES"
+fi
+
 # iDevice's type of CPU
+CPUGenre=$(sysctl hw.cputype | awk '{print $2}')
 CPUType=$(sysctl hw.cpusubtype | awk '{print $2}')
 
 # iDevice's iOS version
 iOSver=$(plutil -key ProductVersion /System/Library/CoreServices/SystemVersion.plist 2> /dev/null | tr -d ".")
-echo "${Meter1}${escYellow}Note:${escReset} running iOS$iOSver on '$CPUType' cpu"
-
-# Workaround for iOS6
-if [ ${iOSver:0:1} -gt 5 ]; then
-	AltDump="YES"
+if [ "$DebugMode" = "YES" ]; then
+	echo "${Meter1}${escYellow}Note:${escReset} running iOS$iOSver on '$CPUType@$CPUGenre' cpu"
 fi
 
 # Convert compatible CpuType
 if [ $CPUType = "10" ]; then
 	CPUType="9"
 fi
-if [ $CPUType != "6" -a $CPUType != "9" -a $CPUType != "11" ]; then
-	echo "${escRed}STOP:${escReset} can't handle this cpu yet !"
+if [ $CPUGenre = "16777228" -a $CPUType = "1" ]; then
+	CPUType="64"
+	echo "${escRed}NOTE:${escReset} this Cpu only has experimental support!"
+	echo "${escRed}NOTE:${escReset} all IPAs must be tested!"
+fi
+# Test if Cpu is known and handled yet
+if [ $CPUType != "6" -a $CPUType != "9" -a $CPUType != "11" -a $CPUType != "64" ]; then
+	echo "${escRed}STOP:${escReset} can't handle this cpu ($CPUType@$CPUGenre) yet!"
+	exit 1
+fi
+
+# RastDecrypted is needed to decrypt executables
+if [ ! -e /usr/bin/RastDecrypted.dylib ]; then
+	echo "$MsgCntFind '/usr/bin/RastDecrypted.dylib'."
 	exit 1
 fi
 
@@ -1051,13 +1666,13 @@ if [ ! -e /var/mobile/.cracked.log ]; then
 	chmod 666 /var/mobile/.cracked.log
 fi
 
-# Don't want MetaData ? It sucks !
+# Don't want MetaData? It sucks!
 if [ ! $RCmetadata = "YES" ]; then
 	echo "${Meter3}${escYellow}Note:${escReset} MetaData='NO' is not recommended"
 	RCmetadatafilename=".backup"
 fi
 
-# Is syslog available ?
+# Is syslog available?
 if [ ! -e /usr/sbin/syslogd ]; then
 	echo "${Meter3}${escYellow}Note:${escReset} should install 'syslogd' from Cydia"
 fi
@@ -1069,14 +1684,14 @@ if [ ! $RCinaGUI = "YES" ]; then
 	# Get and store the encrypted apps list
 	rm -f /tmp/lsd.tmp
 
-	# Why is that slower than next code ???
+	# Why is that slower than next code???
 	#ls -d /var/mobile/Applications/*/*.app/SC_Info 2> /dev/null | sort -f -t \/ -k 6 | while read OneApp
 	## */
 	#do
 	#	echo "$(dirname "$OneApp")" >> /tmp/lsd.tmp
 	#done
 
-	# Why is that faster than previous code ???
+	# Why is that faster than previous code???
 	ls -d /var/mobile/Applications/*/*.app 2> /dev/null | sort -f -t \/ -k 6 | while read OneApp
 	## */
 	do
@@ -1091,13 +1706,6 @@ LoopExit="NO"
 while [ $LoopExit = "NO" ]
 do
 	LoopExit="YES"
-	# Secret "alternative dumping" flag
-	if [ "$1" = "-a" ]; then
-		shift
-		echo "$MsgAltMeth"
-		AltDump="YES"
-		LoopExit="NO"
-	fi
 
 	# Verbose mode flag
 	if [ "$1" = "-v" ]; then
@@ -1171,7 +1779,7 @@ if [ $# -lt 1 ]; then
 		fi
 		exit 1
 	else
-		echo "Missing argument !"
+		echo "Missing argument!"
 		exit 2
 	fi
 fi
@@ -1297,7 +1905,7 @@ if [ ! $RCinaGUI = "YES" ]; then
 				CoreFunction "$OneApp" "$2" "$3"
 				if [ $? = 1 ]; then
 					if [ $RCspeak = "YES" ]; then
-						su mobile -c "speak Error !" &
+						su mobile -c "speak Error!" &
 					fi
 					MenuError=$(($MenuError + 1))
 					if [ -z "$MenuErrorList" ]; then
@@ -1352,7 +1960,7 @@ if [ ! $RCinaGUI = "YES" ]; then
 				LongNames=$(( $BestFound - 3 ))
 				ShortNames=$(( $LongNames - 1 ))
 
-				# Using 'real name' in menu ?
+				# Using 'real name' in menu?
 				if [ $RCrealnamemenu = "YES" ]; then
 					tempfile=$(mktemp)
 					templist=$(mktemp)
@@ -1371,7 +1979,7 @@ if [ ! $RCinaGUI = "YES" ]; then
 				do
 					GoodLetter=${Letters[$Letter]}
 
-					# Using 'real name' in menu ?
+					# Using 'real name' in menu?
 					if [ $RCrealnamemenu = "YES" ]; then
 						unicode="$( cat $templist | grep "${OneApp:0:61}" -B3 | grep -m1 "<string>" | sed -e 's:<string>::g' -e 's:</string>::g' )"
 						# If name is too exotic, use 'internal name'
@@ -1419,7 +2027,7 @@ if [ ! $RCinaGUI = "YES" ]; then
 				if [ -e /tmp/lsddisp.tmp ]; then
 					echo
 					clear
-					echo "*** ${escUnder}Rasticrac v3.1a5 menu${escReset} ***"
+					echo "*** ${escUnder}Rasticrac v3.1.1 menu${escReset} ***"
 					cat /tmp/lsddisp.tmp
 					rm -f /tmp/lsddisp.tmp
 					echo
@@ -1493,7 +2101,7 @@ if [ ! $RCinaGUI = "YES" ]; then
 										CoreFunction "$tempLoc" "$2" "$3"
 										if [ $? = 1 ]; then
 											if [ $RCspeak = "YES" ]; then
-												su mobile -c "speak Error !" &
+												su mobile -c "speak Error!" &
 											fi
 											MenuError=$(($MenuError + 1))
 											if [ -z "$MenuErrorList" ]; then
@@ -1559,4 +2167,3 @@ rm -f /tmp/lsd.tmp
 # Hontoni arigato.
 #
 
-# Thanks for testing v3.1a5
